@@ -1,0 +1,179 @@
+<?php /*a:1:{s:87:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/teachers.html";i:1568731753;}*/ ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>教师管理</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/vue.js"></script>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+<div class="card" id="app">
+    <div class="card-header">
+        <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
+            <span class="fa fa-arrow-left"></span>
+        </button>
+        <h5 class="text-center d-inline-block w-75 m-0">
+            辅导员信息管理
+        </h5>
+    </div>
+    <div class="card-body">
+        <a href="http://cs.jialidun.vip/index/becometeacher?">辅导员申请链接</a>
+        <div class="">
+
+        </div>
+        <div>
+            <input type="text" class="form-control" placeholder="请输入辅导员姓名" @change="searchTeacher">
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-sm w-100">
+                <tr ref="th">
+                    <td>姓名</td>
+                    <td>易班id</td>
+                    <td hidden>手机号</td>
+                    <td hidden>备注</td>
+                    <td>身份</td>
+                    <td>详情</td>
+                </tr>
+                <tr v-for="item in teachers">
+                    <td>{{item.name}}</td>
+                    <td>{{item.yb_uid}}</td>
+                    <td hidden>{{item.phone}}</td>
+                    <td hidden>{{item.extra}}</td>
+                    <td>{{item.status}}</td>
+                    <td><button class="btn btn-sm btn-primary py-0 px-1" data-toggle="modal" data-target="#detail" :id="item.id" @click="GenerateTheTeacher">详情</button></td>
+
+                </tr>
+            </table>
+            <div class="btn-group-sm text-center" ref="page_toggle">
+                <button class="btn btn-info" @click="prePage">上一页</button>
+
+                <button class="btn btn-info" @click="nextPage">下一页</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detail">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>
+                        查看详情
+                    </h4>
+                    <button class="close" type="button" data-dismiss="modal">x</button>
+                </div>
+                <div v-if="the_teacher">
+                    <div class="modal-body" >
+                        <table class="table table-hover mw-100 table-bordered">
+                        <tr v-for="(item,index) in the_teacher">
+                            <td>
+                                {{index}}
+                            </td>
+                            <td class="w-75">
+                                {{item}}
+                            </td>
+                        </tr>
+                        </table>
+                           <div class="btn-group text-center w-100" aria-labelledby="dropdownMenuButton">
+                               <a class="btn btn-info" href="#" @click="set(1)">设为辅导员</a>
+                               <a class="btn btn-primary"  href="#" @click="set(2)">设为后台管理员</a>
+                               <a class="btn btn-danger"  href="#" @click="set(-1)">删除</a>
+                           </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let app = new Vue({
+        el:"#app",
+        data:{
+            teachers:[],
+            current_page : 0,
+            the_teacher:{},
+        },
+        methods:{
+            set:function (type) {
+                if (type == -1){
+                    if (!confirm("确认删除操作？")) return;
+                }
+                let post_data = {
+                    "id" :this.the_teacher.id,
+                    "type" :type
+                }
+                $.post("teacherCheck",post_data,(res)=>{
+                    if (res.code == 200){
+                        alert("操作成功");
+                        location.reload()
+                    }else {
+                        alert("操作失败");
+                        location.reload()
+                    }
+                })
+            },
+            prePage:function () {
+                if (this.current_page == 0) {
+                    alert("这已经是第一页啦！！！");
+                    return;
+                }
+                $.getJSON("teachersList&p="+(this.current_page-1)*10,res=>app.teachers=res)
+                this.current_page -=1;
+            },
+            nextPage:function () {
+                if (this.teachers.length == 0) {
+                    alert("没有数据鸟，当前是最后一页")
+                    return
+                }
+                $.getJSON("teachersList&p="+(this.current_page+1)*10,res=>{
+                    if (res.length == 0){
+                        alert("没有数据鸟");
+                        return;
+                    }
+                    app.teachers=res
+                    this.current_page+=1;
+                })
+
+            },
+            GenerateTheTeacher:function (event) {
+                let ths = this.$refs.th.children
+                let tds = event.target.parentElement.parentElement.children
+                let  v = [];
+                for (let item of tds){
+                    v.push(item.textContent)
+                }
+                v.pop()
+                let teacher_detail = {};
+                teacher_detail.id = event.target.id
+                v.forEach((item,index)=>{
+                    teacher_detail[ths[index].textContent] = item
+                })
+                this.the_teacher = teacher_detail
+            },
+            searchTeacher:function (event) {
+                let name = event.target.value
+                $.post("teacherSearch",{name:name},res=>app.teachers=res)
+                this.$refs.page_toggle.hidden = 1;
+            }
+        },
+        created:function () {
+            $.getJSON("teachersList",res=>app.teachers=res)
+        }
+    })
+</script>
+</body>
+</html>
