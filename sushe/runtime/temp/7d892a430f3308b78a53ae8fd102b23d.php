@@ -1,4 +1,4 @@
-<?php /*a:2:{s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/index.html";i:1568730580;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
+<?php /*a:2:{s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/index.html";i:1569857147;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -29,6 +29,10 @@
     <a href="/teacher/checklog" class="text-center nav d-inline-block border p-2 rounded shadow">
         <img src="/static/img/jilu.png" alt="" class="nav_img">
         <p class="w-100 m-1  p-1 text-center">记录</p>
+    </a>
+    <a href="/teacher/feedbacklog" class="text-center nav d-inline-block border p-2 rounded shadow">
+        <img src="/static/img/fk.png" alt="" class="nav_img">
+        <p class="w-100 m-1  p-1 text-center">学生反馈</p>
     </a>
 </div>
 </div>

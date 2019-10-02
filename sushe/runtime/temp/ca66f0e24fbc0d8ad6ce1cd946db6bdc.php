@@ -1,3 +1,4 @@
+<?php /*a:2:{s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/history.html";i:1569947776;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,7 +7,11 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>系统操作记录</title>
-    {include file="public/header"}
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="card" id="app">

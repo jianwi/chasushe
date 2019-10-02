@@ -26,4 +26,15 @@ class Room extends Model
             "fangjian" => $fangjian['name']
         ];
     }
+    static function hasPrev($id)
+    {
+        return Room::where([
+            "prev" => $id
+        ])->select();
+    }
+    static function delHome($id)
+    {
+       return User::where(["room_id"=>intval($id)])->update(['isDelete'=>1]);
+    }
+
 }

@@ -4,6 +4,7 @@ namespace app\chasu\controller;
 
 use app\chasu\common\res;
 use app\chasu\facade\yiban;
+use app\chasu\model\Feedback;
 use app\chasu\model\History;
 use app\chasu\model\Room;
 use think\Db;
@@ -12,6 +13,7 @@ use think\facade\Request;
 class Teacher
 {
     private  $info;
+    private $user;
     public function __construct()
     {
         $yb_uid = yiban::getUid();
@@ -22,6 +24,7 @@ class Teacher
             ->where("status",">","0")
             ->find();
             $this->info = $info or die("没有操作权限");
+            $this->user = $this->info;
 
     }
     public function index()
@@ -162,5 +165,123 @@ class Teacher
         $post_file = Request::file("files");
         $info = $post_file->move("./uploads");
         return $info->getSaveName();
+    }
+    public function feedbackLog()
+    {
+        return view();
+    }
+    public function getFeedbackList($p=0)
+    {
+        $res = Feedback::where([
+            "feedback.isDelete" => 0,
+            "teacher_id" => $this->user['id']
+        ])
+            ->field("feedback.*,user.name")
+            ->join("user","feedback.student_id = user.id")
+            ->withAttr("status",function ($status){
+                return [
+                    0=>"等待处理",
+                    -1=>"被驳回",
+                    1=> "已处理",
+                ][$status];
+            })
+            ->withAttr("type",function ($status){
+                return [
+                    1=>"查宿",
+                    2=> "学生违纪",
+                ][$status];
+            })
+            ->limit($p,10)
+            ->order("id desc")
+            ->select();
+        return res::res($res);
+    }
+    public function feedbackDetail()
+    {
+        $id = Request::get("id/d");
+        $res = Feedback::where([
+            "feedback.isDelete" => 0,
+            "teacher_id" => $this->user['id'],
+            "feedback.id" => $id
+        ])
+            ->field("feedback.*,user.name")
+            ->join("user","feedback.student_id = user.id")
+            ->withAttr("status",function ($status){
+                return [
+                    0=>"等待处理",
+                    -1=>"被驳回",
+                    1=> "已处理",
+                ][$status];
+            })
+            ->withAttr("type",function ($status){
+                return [
+                    0=>"",
+                    1=>"查宿",
+                    2=> "学生违纪",
+                ][$status];
+            })
+            ->find();
+        return res::res($res);
+    }
+    public function cancelFeedback()
+    {
+        $id = Request::post("id/d");
+        $reply = Request::post("reply");
+        $res = Feedback::update([
+            "status" => -1,
+            "reply" => $reply
+        ],[
+            "id" => $id,
+            "teacher_id" => $this->user['id']
+        ]);
+        return res::res($res);
+    }
+    public function confirmFeedback()
+    {
+        $id = Request::post("id/d");
+        $reply = Request::post("reply");
+        $res = Feedback::update([
+            "status" => 1,
+            "reply" => $reply
+        ],[
+            "id" => $id,
+            "teacher_id" => $this->user['id']
+        ]);
+        return res::res($res);
+    }
+    public function fkDealRoom($id="")
+    {
+        return view()->assign([
+            "id"=>$id
+        ]);
+    }
+    public function fkDealStudent($id="")
+    {
+        return view()->assign([
+            "id"=>$id
+        ]);
+    }
+    public function studentCheckInfo($id)
+    {
+        $res = Db::table("students_check")
+            ->field("students_check.*,user.name,user.college,user.major,user.pic,user.room")
+            ->where([
+                "students_check.isDelete" => 0,
+                "students_check.teacher_id" => $this->info['id'],
+                "students_check.id" => $id
+            ])
+            ->withAttr("crime",function ($value){
+                $sta = [
+                    "1" => "晚归" ,
+                    "2" => "夜不归宿"
+                ];
+                return $sta[$value];
+            })
+            ->join("user","students_check.student_id=user.id")
+            ->find();
+        if ($res){
+            $res["room"] = $this->getRoomInfo($res["room"]);
+        }
+        return json($res);
     }
 }

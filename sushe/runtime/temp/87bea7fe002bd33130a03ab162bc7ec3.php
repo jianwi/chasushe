@@ -1,4 +1,4 @@
-<?php /*a:2:{s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/student/index.html";i:1569342413;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
+<?php /*a:2:{s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/student/index.html";i:1569770083;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -20,8 +20,9 @@
     </h2>
     <img src="<?php echo htmlentities($user_info->info->yb_userhead); ?>" class="w-25 rounded-circle"/>
 
-    <a href="/student/mine" class="btn btn-block p-3 btn-info my-4 mx-auto w-75" hidden>我的信息</a>
-    <a href="/student/checkLog" class="btn btn-block btn-info p-3 mx-auto mb-5 w-75">辅导员查宿记录</a>
+    <a href="/student/checkLog" class="btn btn-block btn-info p-3 mx-auto m-4 w-75">辅导员查宿记录</a>
+    <a href="/student/feedbacklog" class="btn btn-block p-3 btn-info mb-5 mx-auto w-75" >我的反馈记录</a>
+
 
 </div>
 <div class="alert alert-secondary text-center m-0 fixed-bottom">

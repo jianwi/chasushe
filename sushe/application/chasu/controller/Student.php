@@ -3,6 +3,7 @@ namespace app\chasu\controller;
 
 use app\chasu\common\res;
 use app\chasu\facade\yiban;
+use app\chasu\model\Feedback;
 use app\chasu\model\User;
 use think\Db;
 use think\facade\Request;
@@ -95,4 +96,100 @@ class Student
         $res["pic"] = explode(",",$res['pic']);
         return json($res);
     }
+    public function feedback()
+    {
+        $post_data = Request::only(["id","content","type"],"post");
+
+        if ($post_data['type'] == 1){
+            $teacher_id = Db::table("students_check")
+                ->where(["id"=>$post_data['id']])
+                ->value("teacher_id");
+        }elseif ($post_data['type'] == 2){
+            $teacher_id = Db::table("room_check")
+                ->where(["id"=>$post_data['id']])
+                ->value("teacher_id");
+        }
+
+        $res = Feedback::create([
+            "check_id" => $post_data['id'],
+            "student_id" => $this->user['id'],
+            "teacher_id" => $teacher_id,
+            "content" => $post_data['content'],
+            "type" => $post_data['type'],
+            "status" => 0,
+        ]);
+        return res::res($res);
+    }
+    public function feedbackLog()
+    {
+        return view();
+    }
+    public function getFeedbackList()
+    {
+        $res = Feedback::where([
+            "isDelete" => 0,
+            "student_id" => $this->user['id']
+        ])
+            ->withAttr("status",function ($status){
+                return [
+                    0=>"等待处理",
+                    -1=>"被驳回",
+                    1=> "已处理",
+                    ][$status];
+            })
+            ->select();
+        return res::res($res);
+    }
+    public function feedbackDetail()
+    {
+        $id = Request::get("id/d");
+        $res = Feedback::where([
+            "feedback.isDelete" => 0,
+            "student_id" => $this->user['id'],
+            "feedback.id" => $id
+        ])
+            ->field("feedback.*,user.name")
+            ->join("user","feedback.student_id = user.id")
+            ->withAttr("status",function ($status){
+                return [
+                    0=>"等待处理",
+                    -1=>"被驳回",
+                    1=> "已处理",
+                ][$status];
+            })
+            ->withAttr("type",function ($status){
+                return [
+                    0=>"",
+                    1=>"查宿",
+                    2=> "学生违纪",
+                ][$status];
+            })
+            ->find();
+        return res::res($res);
+    }
+    public function cancelFeedback()
+    {
+        $id = Request::post("id/d");
+        $res = Feedback::update([
+            "isDelete" => 1
+        ],[
+            "id" => $id,
+            "student_id" => $this->user['id']
+        ]);
+        return res::res($res);
+    }
+    public function modifyFeedback()
+    {
+        $id = Request::post("id/d");
+        $content = Request::post("content");
+        $res = Feedback::update([
+            "status" => 1,
+            "content" => $content
+        ],[
+            "id" => $id,
+            "student_id" => $this->user['id']
+        ]);
+        return res::res($res);
+    }
+
 }

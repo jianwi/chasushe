@@ -88,61 +88,17 @@ class Admin
             return 0;
         }
     }
-    public function delete(){
-        $id = Request::post("id");
-        Db::startTrans();
-        try{
-            Room::where([
-                "id" => intval($id)
-            ])
-                ->update(['isDelete'=>1]);
-
-            $child1 = Room::where([
-                "prev" => $id
-            ])->select();
-            if (count($child1)===0){
-                User::where(["room_id"=>intval($id)])->update(['isDelete'=>1]);
-            }
-            foreach ($child1 as $danyuan){
-                Room::where([
-                    "id" => ($danyuan['id'])
-                ])
-                    ->update(['isDelete'=>1]);
-
-                $child2 = Room::where([
-                    "prev" => $danyuan['id']
-                ])->select();
-                if (count($child2)===0){
-                    User::where(["room_id"=>$danyuan['id']])->update(['isDelete'=>1]);
-                }
-                foreach ($child2 as $louceng) {
-                    Room::where([
-                        "id" => ($louceng['id'])
-                    ])
-                        ->update(['isDelete' => 1]);
-
-                    $child3 = Room::where([
-                        "prev" => $louceng['id']
-                    ])->select();
-                    if (count($child3)===0){
-                        User::where(["room_id"=>$louceng['id']])->update(['isDelete'=>1]);
-                    }
-                        foreach ($child3 as $fangjian){
-                            Room::where([
-                                "id" => ($fangjian['id'])
-                            ])
-                                ->update(['isDelete'=>1]);
-                            User::where(["room_id"=>$fangjian['id']])->update(['isDelete'=>1]);
-                        }
-                    }
-                }
-            Db::commit();
-            return res::success();
-        }catch (Exception $e){
-            Db::rollback();
-            return res::fail();
-        }
+    public function delete()
+    {
+        $id = Request::post("id/d");
+        $res = Room::update([
+            "isDelete" => 1,
+        ],[
+            "id"=> $id
+        ]);
+        return res::res($res);
     }
+
     public function teachers(){
         return view();
     }
@@ -269,5 +225,79 @@ class Admin
     public function history()
     {
         return view();
+    }
+    public function historyList($p=0)
+    {
+        $res = History::order("history.id desc")
+            ->field("history.*,teacher.name")
+            ->where([
+                "history.isDelete" => 0
+            ])
+            ->limit($p,10)
+            ->join("teacher","history.user=teacher.id")
+            ->select();
+        return json($res);
+    }
+    public function fkDealRoom($id="")
+    {
+        return view()->assign([
+            "id"=>$id
+        ]);
+    }
+    public function fkDealStudent($id="")
+    {
+        return view()->assign([
+            "id"=>$id
+        ]);
+    }
+    public function studentCheckInfo($id)
+    {
+        $res = Db::table("students_check")
+            ->field("students_check.*,user.name,user.college,user.major,user.pic,user.room")
+            ->where([
+                "students_check.id" => $id
+            ])
+            ->withAttr("crime",function ($value){
+                $sta = [
+                    "1" => "晚归" ,
+                    "2" => "夜不归宿"
+                ];
+                return $sta[$value];
+            })
+            ->join("user","students_check.student_id=user.id")
+            ->find();
+        if ($res){
+            $res["room"] = (new Teacher())->getRoomInfo($res["room"]);
+        }
+        return json($res);
+    }
+    public function roomCheckInfo($id)
+    {
+        $res = Db::table("room_check")
+            ->where([
+                "room_check.isDelete" => 0,
+                "room_check.teacher_id" => $this->info['id'],
+                "id" => $id
+            ])
+            ->find();
+        $res["room"] = (new Teacher())->getRoomInfo($res["room"]);
+        $res["pic"] = explode(",",$res['pic']);
+        return json($res);
+    }
+    public function drawback()
+    {
+        $id = Request::get("id/d");
+        $obj = History::get($id);
+        $res = History::update([
+            "status" => 1,
+        ],[
+            "id"=>$id
+        ]);
+        if ($obj['type'] == 1){
+           return History::drawbackStudentCheck($obj['obj']);
+        }elseif ($obj['type'] == 2){
+            return History::drawbackRoomCheck($obj['obj']);
+        }
+        return res::res($res);
     }
 }

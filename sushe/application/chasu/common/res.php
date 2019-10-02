@@ -27,9 +27,9 @@ class res
     static function res($data)
     {
         if ($data){
-            return self::success();
+            return self::success($data);
         }else{
-            return self::fail();
+            return self::fail($data);
         }
     }
 }

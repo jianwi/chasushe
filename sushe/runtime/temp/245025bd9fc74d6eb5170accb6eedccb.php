@@ -1,4 +1,4 @@
-<?php /*a:2:{s:90:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/student/check_log.html";i:1569342917;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
+<?php /*a:2:{s:90:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/student/check_log.html";i:1569768193;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -52,7 +52,7 @@
                             {{item.date}}
                         </td>
                         <td>
-                            <button class="btn btn-sm btn-danger" :id="item.id" @click.prvent>
+                            <button class="btn btn-sm btn-danger" type="1" :id="item.id" @click="fk">
                                 反馈
                             </button>
                         </td>
@@ -136,8 +136,7 @@
                                 <img width="310px" class="mw-100 m-2" :src="'/uploads/'+item" v-for="item in room_check_info.pic" alt="">
                             </div>
                             <input type="text" name="id" :value="room_check_info.id" hidden>
-                            <button class="btn btn-primary m-3" hidden>提交修改</button>
-                            <button  hidden class="btn btn-danger m-3" :id="room_check_info.id" @click.prevent="delRoomCheck">删除此记录</button>
+                            <button  class="btn btn-danger m-3" :id="room_check_info.id" type="2" @click.prevent="fk">反馈</button>
                         </form>
                     </div>
                 </div>
@@ -184,51 +183,27 @@
                 let id = event.target.id
                 $.getJSON("roomcheckinfo&id=" + id, res => this.room_check_info = res)
             },
-            sub: function (event) {
-                if (!confirm("确认要修改查宿信息吗?")) return;
-                let post_data = new FormData(event.target)
-                $.ajax({
-                    url: "modifyCheckInfo",
-                    contentType: false,
-                    processData: false,
-                    method: "POST",
-                    data: post_data,
-                    success: function (res) {
-                        if (res.code == 200) {
-                            alert("提交成功");
-                            location.reload();
-                        } else {
-                            alert("提交失败")
-                        }
+            fk:function (event) {
+                let id = event.target.id,type = event.target.getAttribute("type")
+                let content = prompt("请输入备注信息或者您对此次查宿情况产生的疑问，将转交给您的辅导员处理");
+                if (content==""||!content){
+                    return alert("没有检测到输入,取消操作");
+                }
+                let data = {
+                    "id" : id,
+                    "content" : content,
+                    "type" : type
+                }
+                $.post("feedback",data,(res)=>{
+                    if (res.code==200){
+                        alert("反馈成功，请耐心等待辅导员处理")
+                    }else {
+                        alert("反馈失败")
                     }
                 })
-            },
-            setRoomCheck2:function()
-            {
-                $.getJSON("roomCheck2Log&id=" + this.fangjian_id, res => this.roomcheck2 = res)
-            },
-            del: function (event) {
-                if (!confirm("确认删除此信息?")) return;
-                $.getJSON("delStudentCheck&id=" + event.target.id, res => {
-                    if (res.code == 200) {
-                        alert("处理成功");
-                        location.reload()
-                    } else {
-                        alert("处理失败,请稍后再试")
-                    }
-                })
-            },
-            delRoomCheck: function (event) {
-                if (!confirm("确认删除此信息?")) return;
-                $.getJSON("delRoomCheck&id=" + event.target.id, res => {
-                    if (res.code == 200) {
-                        alert("处理成功");
-                        location.reload()
-                    } else {
-                        alert("处理失败,请稍后再试")
-                    }
-                })
-            },
+
+            }
+
         },
         created:function () {
             $.getJSON("roomchecklog",res=>this.roomcheck=res);

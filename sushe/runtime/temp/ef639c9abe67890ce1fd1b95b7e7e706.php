@@ -1,4 +1,4 @@
-<?php /*a:1:{s:83:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/room.html";i:1568731722;}*/ ?>
+<?php /*a:1:{s:83:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/room.html";i:1569735433;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -169,7 +169,7 @@ let room_vm = new Vue({
             $.getJSON("getRoom&id="+this[cur],res=>room_vm[which_sel]=res)
         },
         del:function (which) {
-            if (!confirm("将会顺带删除相关学生信息，确认操作？")) return;
+            if (!confirm("确认操作？")) return;
             $.post("delete",{id:this[which]},res=>{
                 if (res.code == 200){
                     alert("删除成功")
