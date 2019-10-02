@@ -251,14 +251,18 @@ class Teacher
     }
     public function fkDealRoom($id="")
     {
+        $obj = Feedback::get($id);
+
         return view()->assign([
-            "id"=>$id
+            "id"=>$obj['check_id']
         ]);
     }
     public function fkDealStudent($id="")
     {
+        $obj = Feedback::get($id);
+
         return view()->assign([
-            "id"=>$id
+            "id"=>$obj['check_id']
         ]);
     }
     public function studentCheckInfo($id)

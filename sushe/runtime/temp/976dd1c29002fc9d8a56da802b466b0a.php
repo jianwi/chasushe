@@ -1,4 +1,4 @@
-<?php /*a:2:{s:93:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/feedback_log.html";i:1569947630;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
+<?php /*a:2:{s:93:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/feedback_log.html";i:1570028024;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -103,8 +103,8 @@
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <a :href="'fkdealroom?id='+fk_detail.id" v-if="fk_detail.type=='学生违纪'" class="btn btn-sm btn-info">去处理</a>
-                                <a href="'fkdealstudent?id='+fk_detail.id" v-if="fk_detail.type=='查宿'" class="btn btn-sm btn-info">去处理</a>
+                                <a :href="'fkdealstudent?id='+fk_detail.id" v-if="fk_detail.type=='学生违纪'" class="btn btn-sm btn-info">去处理</a>
+                                <a href="'fkdealroom?id='+fk_detail.id" v-if="fk_detail.type=='查宿'" class="btn btn-sm btn-info">去处理</a>
                                 <button class="btn btn-sm btn-info" :id="fk_detail.id" @click="hasDeal">已处理</button>
                                 <button class="btn btn-sm btn-info" :id="fk_detail.id" @click="cancel">驳回</button>
                             </td>
