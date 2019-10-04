@@ -13,11 +13,15 @@ class Student
     private $user;
     function __construct()
     {
-        $user = User::where([
-            "yb_uid" => yiban::getUid(),
-            "isDelete" => 0
-        ])->find();
-        $this->user = $user;
+        if (!$this->isRegister()){
+            $user = User::where([
+                "yb_uid" => yiban::getUid(),
+                "isDelete" => 0
+            ])->find();
+            $this->user = $user;
+        }else{
+            return $this->chooseRoom();
+        }
     }
 
     public function index()
@@ -36,7 +40,6 @@ class Student
     }
     public function chooseRoom()
     {
-
         if ($this->isRegister()) return "你已完善过信息";
         return view();
     }
