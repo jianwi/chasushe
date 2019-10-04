@@ -21,6 +21,7 @@ class Student
             $this->user = $user;
         }else{
             return $this->chooseRoom();
+            die();
         }
     }
 
