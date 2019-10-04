@@ -5,6 +5,7 @@ use app\chasu\common\res;
 use app\chasu\facade\yiban;
 use app\chasu\model\Feedback;
 use app\chasu\model\User;
+use think\Controller;
 use think\Db;
 use think\facade\Request;
 
@@ -13,22 +14,17 @@ class Student
     private $user;
     function __construct()
     {
-        if (!$this->isRegister()){
-            $user = User::where([
-                "yb_uid" => yiban::getUid(),
-                "isDelete" => 0
-            ])->find();
-            $this->user = $user;
-        }else{
-            return $this->chooseRoom();
-            die();
-        }
+        $user = User::where([
+            "yb_uid" => yiban::getUid(),
+            "isDelete" => 0
+        ])->find();
+        $this->user = $user;
     }
 
     public function index()
     {
         $user_info = yiban::getUserInfo();
-        if (!$this->isRegister()) return $this->chooseRoom();
+        if (!$this->isRegister()) return header("Location:/student/chooseRoom");
         return view()->assign("user_info",$user_info);
     }
 
@@ -41,6 +37,7 @@ class Student
     }
     public function chooseRoom()
     {
+
         if ($this->isRegister()) return "你已完善过信息";
         return view();
     }
