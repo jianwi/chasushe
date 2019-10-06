@@ -1,4 +1,4 @@
-<?php /*a:2:{s:83:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/room.html";i:1570334748;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
+<?php /*a:2:{s:83:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/room.html";i:1570335409;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -81,15 +81,11 @@
                         <label>单元</label>
                         <div v-html="danyuan">
                         </div>
-                            <button class="btn btn-info">提交</button>
+                            <button class="btn btn-info m-2">提交</button>
                         </form>
 
                     </div>
                 </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">保存</button>
-                    </div>
             </div>
     </div>
     </div>

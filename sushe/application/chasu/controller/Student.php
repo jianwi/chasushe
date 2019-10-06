@@ -184,7 +184,6 @@ class Student
         $id = Request::post("id/d");
         $content = Request::post("content");
         $res = Feedback::update([
-            "status" => 1,
             "content" => $content
         ],[
             "id" => $id,

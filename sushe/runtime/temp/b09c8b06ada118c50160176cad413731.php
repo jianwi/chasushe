@@ -1,4 +1,4 @@
-<?php /*a:1:{s:91:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/all_students.html";i:1568990000;}*/ ?>
+<?php /*a:2:{s:91:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/all_students.html";i:1570334634;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,12 +8,12 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <script src="/static/js/vue.js"></script>
-    <script src="/static/js/jquery.min.js"></script>
-    <script src="/static/js/popper.min.js"></script>
-    <script src="/static/js/bootstrap.min.js"></script>
-    <style>
-    </style>
+<link rel="stylesheet" href="/static/css/font-awesome.min.css">
+
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="card" id="app">

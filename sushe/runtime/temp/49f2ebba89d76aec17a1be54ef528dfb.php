@@ -1,4 +1,4 @@
-<?php /*a:1:{s:91:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/check_room.html";i:1568731581;}*/ ?>
+<?php /*a:2:{s:91:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/check_room.html";i:1570334856;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,10 +9,14 @@
     <title>查宿</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/ssi-uploader.min.css">
-    <script src="/static/js/vue.js"></script>
-    <script src="/static/js/jquery.min.js"></script>
-    <script src="/static/js/popper.min.js"></script>
-    <script src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/font-awesome.min.css">
+
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+
     <script src="/static/js/ssi-uploader.js"></script>
 </head>
 <body>
