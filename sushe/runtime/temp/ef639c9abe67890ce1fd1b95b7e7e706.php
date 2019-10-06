@@ -1,4 +1,4 @@
-<?php /*a:1:{s:83:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/room.html";i:1569736034;}*/ ?>
+<?php /*a:2:{s:83:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/room.html";i:1570334748;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,12 +8,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>公寓管理</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
-    <script src="/static/js/vue.js"></script>
-    <script src="/static/js/jquery.min.js"></script>
+<link rel="stylesheet" href="/static/css/font-awesome.min.css">
 
-    <script src="/static/js/bootstrap.min.js"></script>
-    <script src="/static/js/popper.min.js"></script>
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
