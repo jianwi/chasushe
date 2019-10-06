@@ -251,7 +251,7 @@ class Teacher
     }
     public function fkDealRoom($id="")
     {
-        $obj = Db::table("room_check")->get($id);
+        $obj = Feedback::get($id);
 
         return view()->assign([
             "id"=>$obj['check_id']
@@ -259,7 +259,8 @@ class Teacher
     }
     public function fkDealStudent($id="")
     {
-        $obj = Db::name("students_check")->get($id);
+        $obj = Feedback::get($id);
+
         return view()->assign([
             "id"=>$obj['check_id']
         ]);
