@@ -164,6 +164,7 @@
 $('#ssi-upload').ssi_uploader({
     url: 'upload',
     locale:"zh_CN",
+    maxFileSize:10240,
     onEachUpload:function (res) {
         if (res.responseMsg=="服务器内部错误") return;
         app.images.push(res.responseMsg)
