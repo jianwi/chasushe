@@ -47,7 +47,7 @@
                             {{item.date}}
                         </td>
                         <td>
-                            <button class="btn btn-sm btn-danger" type="1" :id="item.id" @click="fk">
+                            <button class="btn btn-sm btn-danger" type="2" :id="item.id" @click="fk">
                                 反馈
                             </button>
                         </td>
@@ -131,7 +131,7 @@
                                 <img width="310px" class="mw-100 m-2" :src="'/uploads/'+item" v-for="item in room_check_info.pic" alt="">
                             </div>
                             <input type="text" name="id" :value="room_check_info.id" hidden>
-                            <button  class="btn btn-danger m-3" :id="room_check_info.id" type="2" @click.prevent="fk">反馈</button>
+                            <button  class="btn btn-danger m-3" :id="room_check_info.id" type="1" @click.prevent="fk">反馈</button>
                         </form>
                     </div>
                 </div>
