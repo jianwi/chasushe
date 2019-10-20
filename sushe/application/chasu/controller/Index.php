@@ -8,6 +8,7 @@ use app\chasu\model\Room;
 use app\chasu\model\User;
 use app\chasu\model\Teacher;
 use http\Header;
+use think\Db;
 use think\facade\Config;
 use think\facade\Request;
 
@@ -46,7 +47,13 @@ class Index
         }
     }
 
-
+    public function allXiaoqu()
+    {
+        return json(Room::where([
+            "isDelete" =>0,
+            "type" => 1,
+        ])->select());
+    }
     public function Allroom()
     {
         $data = Room::where([
@@ -60,6 +67,25 @@ class Index
             "prev" => $id,
             "isDelete" => 0
         ])->select();
+    }
+    public function getCollege()
+    {
+        return json(Db::table("class_info")
+            ->where([
+                "isDelete" => 0,
+                "type" => 1
+            ])
+            ->select());
+    }
+    public function getClass()
+    {
+        $college = Request::get("id/d") or die("403");
+        return json(Db::table("class_info")
+        ->where([
+            "isDelete" => 0,
+            "college" => $college
+        ])
+        ->select());
     }
     public function getUser()
     {

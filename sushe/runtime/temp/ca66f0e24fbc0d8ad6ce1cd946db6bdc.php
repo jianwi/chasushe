@@ -1,4 +1,4 @@
-<?php /*a:2:{s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/history.html";i:1569947776;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
+<?php /*a:2:{s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/history.html";i:1571582144;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -17,6 +17,9 @@
 </head>
 <body>
 <div class="card" id="app">
+    <h2 ref="loading" class="alert alert-info text-center py-5 align-content-center" style="position: fixed;width: 100%;height: 100vh;z-index: 1000">
+        加载中,请稍后
+    </h2>
     <div class="card-header">
         <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
             <span class="fa fa-arrow-left"></span>
@@ -109,6 +112,10 @@
         created:function () {
             $.getJSON("historyList", res => this.history_list = res)
         },
+        mounted:function () {
+            this.$refs.loading.hidden = 1;
+        }
+
     })
 </script>
 </body>

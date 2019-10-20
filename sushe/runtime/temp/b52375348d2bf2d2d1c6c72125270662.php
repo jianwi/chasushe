@@ -1,4 +1,4 @@
-<?php /*a:1:{s:84:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/index/index.html";i:1568964273;}*/ ?>
+<?php /*a:1:{s:84:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/index/index.html";i:1571584507;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -23,9 +23,9 @@
     <a href="/admin" class="btn btn-block btn-info p-3 mx-auto mb-5 w-75">我是后台管理员</a>
 
 </div>
-<div class="alert alert-secondary text-center m-0 fixed-bottom">
-Powered and Design by 奇点工作室
-</div>
+<!--<div class="alert alert-secondary text-center m-0 fixed-bottom">-->
+<!--Powered and Design by 奇点工作室-->
+<!--</div>-->
 
 </body>
 </html>

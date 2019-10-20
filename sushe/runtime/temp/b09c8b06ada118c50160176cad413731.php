@@ -1,4 +1,4 @@
-<?php /*a:2:{s:91:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/all_students.html";i:1570334634;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
+<?php /*a:2:{s:91:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/all_students.html";i:1571581414;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +17,9 @@
 </head>
 <body>
 <div class="card" id="app">
+    <h2 ref="loading" class="alert alert-info text-center py-5 align-content-center" style="position: fixed;width: 100%;height: 100vh;z-index: 1000">
+        加载中,请稍后
+    </h2>
     <div class="card-header">
         <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
             <span class="fa fa-arrow-left"></span>
@@ -37,13 +40,16 @@
                 <tr ref="th">
                     <td>姓名</td>
                     <td>学院</td>
-                    <td>宿舍号</td>
+                    <td>班级</td>
+                    <td>宿舍</td>
                     <td>详情</td>
                 </tr>
                 <tr v-for="item in students">
                     <td>{{item.name}}</td>
                     <td>{{item.college}}</td>
+                    <td>{{item.class}}</td>
                     <td>
+                        {{item.room.xiaoqu}}
                         {{item.room.gongyu}}
                         {{item.room.danyuan}}
                         {{item.room.louceng}}层
@@ -167,6 +173,9 @@
         },
         created:function () {
             $.getJSON("studentsList",res=>app.students=res)
+        },
+        mounted:function () {
+            this.$refs.loading.hidden = 1;
         }
     })
 </script>

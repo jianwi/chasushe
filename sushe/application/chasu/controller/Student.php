@@ -46,7 +46,7 @@ class Student
         $post_file = Request::file("photo") or die("403");
         $info = $post_file->move("./uploads");
         $pic = $info->getSaveName() or die("文件上传失败");
-        $post_data = Request::only(["name","college","major","room"],"post") or die("403");
+        $post_data = Request::only(["name","college","class","room"],"post") or die("403");
         $post_data['yb_uid']=yiban::getUid();
         $post_data['pic'] = $pic;
         $state = User::create($post_data);

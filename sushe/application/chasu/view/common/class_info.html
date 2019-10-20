@@ -1,0 +1,121 @@
+{include file="/public/content" /}
+
+<div>
+    <h6 class="h6 text-center">学院列表</h6>
+    <table>
+        <div class="input-group my-1" v-for="item in college_list">
+            <input  class="form-control" :value="item.name">
+            <div class="btn btn-sm btn-primary input-group-append mx-1" :data-id="item.id" data-toggle="modal" data-target="#college_detail_modal" @click="watchCollegeDetail">
+                查看
+            </div>
+            <button :data-id="item.id" class="btn btn-sm btn-primary input-group-append mx-1" @click="rename">
+                重命名
+            </button>
+            <div :id="item.id" class="btn btn-sm btn-warning  input-group-append" @click="delCollege">
+                删除
+            </div>
+
+        </div>
+    </table>
+
+    <div class="input-group">
+        <input type="text" class="form-control" ref="add_college_value">
+        <button class="btn btn-sm btn-outline-success input-group-append" @click="addCollege">
+            添加学院
+        </button>
+    </div>
+</div>
+<div class="modal hide" id="college_detail_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                学院详情
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" >
+                <div class="input-group my-1" v-for="item in class_list" v-if="class_list">
+                    <input  class="form-control" :value="item.name">
+                    <button :data-id="item.id" class="btn btn-sm btn-primary input-group-append mx-1" @click="rename">
+                        重命名
+                    </button>
+                    <div :id="item.id" class="btn btn-sm btn-warning  input-group-append" @click="delCollege">
+                        删除
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control" ref="add_class_value">
+                    <button class="btn btn-sm btn-outline-success input-group-append" @click="addClass">
+                        添加班级
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{include file="/public/content_footer" /}
+
+<script>
+    let app = new Vue({
+        el:"#app",
+        data:{
+            app:{
+                title:"班级管理"
+            },
+            toast:{
+              show:false,
+              content:"我是提示",
+            },
+            college_list:null,
+            current_college:null,
+            class_list:"",
+        },
+        methods:{
+            addCollege:function (event) {
+                let v = this.$refs.add_college_value.value;
+                if (v == "") return ;
+                this.$refs.add_college_value.value = "";
+                $.post("/class_Info/addCollege",{name:v},res=>this.college_list.push(res.data))
+            },
+            delCollege:function (event) {
+                if (!confirm("确认删除整个学院？")) return this.toast.show=true,this.toast.content="取消删除",setTimeout(function () {
+                    app.toast.show=false;
+                },2000);
+                let id = event.target.id;
+                $.post("/class_info/delCollege",{id:id},()=>location.reload())
+            },
+            watchCollegeDetail:function (event) {
+                let college_id = $(event.target).data("id")
+                this.current_college = college_id
+                $.getJSON("/class_Info/getClassList?college_id="+college_id,res=>this.class_list=res.data)
+            },
+            addClass:function (event) {
+                let v = this.$refs.add_class_value.value;
+                let college = this.current_college;
+                if (v == "") return ;
+                this.$refs.add_class_value.value = "";
+                $.post("/class_Info/addClass",{name:v,college:college},res=>this.class_list.push(res.data))
+            },
+            rename:function (event) {
+                let id = $(event.target).data("id");
+                let name = event.target.parentElement.getElementsByTagName("input")[0].value;
+                $.post("/class_Info/rename",{id:id,name:name},res=>{
+                    if (200 == res.code){
+                        alert("操作成功")
+                    }else {
+                        alert("操作失败,请稍后再试")
+                    }
+                })
+            }
+        },
+        created:function () {
+            $.getJSON("/class_Info/getCollegeList",res=>this.college_list=res.data)
+        },
+        mounted:function () {
+            this.$refs.loading.hidden = 1;
+        }
+    })
+</script>

@@ -47,33 +47,45 @@ class Admin
         ])->select();
         return json($data);
     }
+
+    public function addXiaoqu()
+    {
+        $post_data = Request::only(['name']);
+        $post_data['type'] = 1;
+        $res = Room::create($post_data);
+        return res::res($res);
+    }
     public function saveRoom()
     {
         $data = Request::post();
-
         if (!$data) return false;
 
         Db::startTrans();
         try{
             $gongyu = Db::table("room")->insertGetId([
-                "name" => $data['room_name']
+                "name" => $data['room_name'],
+                "type" => 2,
+                "prev" => $data['prev']
             ]);
           foreach ($data['danyuan_name'] as $index => $danyuan){
 
                 $danyuan_id = Db::table("room")->insertGetId([
                     "name" => $danyuan,
+                    "type" => 3,
                     "prev" => $gongyu
                 ]);
 
               for ($i=1;$i<=$data['louceng'][$index];$i++){
                     $louceng = Db::table("room")->insertGetId([
                         "name" => $i,
+                        "type" => 4,
                         "prev" => $danyuan_id
                     ]);
                     $datas = [];
                     for ($n=1;$n<=$data['room_count'][$index];$n++){
                         array_push($datas,[
                             "name" => $n,
+                            "type" => 5,
                             "prev" => $louceng
                         ]);
                     }
@@ -159,10 +171,7 @@ class Admin
     public function modifyStudentInfo($id)
     {
         $id = intval($id) or die("403");
-        $user_info = User::where([
-            "isDelete" => 0,
-            "id" => $id
-        ])->find();
+        $user_info = User::getUserInfo($id);
         if (!$user_info) return "没有此用户";
         return view()->assign([
             "user" => $user_info
@@ -209,6 +218,8 @@ class Admin
             ->select()->all();
         $res = array_map(function ($i){
             $i["room"] = Room::getRoomInfo($i["room"]);
+            $i['class'] = User::getClass($i['class']);
+            $i['college'] = User::getClass($i['college']);
             return $i;
         },$res);
         return json($res);
@@ -216,10 +227,16 @@ class Admin
     public function studentSearch()
     {
         $name = Request::post("name");
-        $students_list = User::where("name","like","{$name}%")->where("isDelete","0")
+        $res = User::where("name","like","{$name}%")->where("isDelete","0")
             ->order("id desc")
-            ->select();
-        return json($students_list);
+            ->select()->toArray();
+        $res = array_map(function ($i){
+            $i["room"] = Room::getRoomInfo($i["room"]);
+            $i['class'] = User::getClass($i['class']);
+            $i['college'] = User::getClass($i['college']);
+            return $i;
+        },$res);
+        return json($res);
     }
 
     public function history()
@@ -299,5 +316,13 @@ class Admin
             return History::drawbackRoomCheck($obj['obj']);
         }
         return res::res($res);
+    }
+    public function classInfo()
+    {
+        return view("common/class_info");
+    }
+    public function distributeClass()
+    {
+        return view("common/distribute_class");
     }
 }

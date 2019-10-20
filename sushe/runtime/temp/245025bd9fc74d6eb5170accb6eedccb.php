@@ -1,4 +1,4 @@
-<?php /*a:2:{s:90:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/student/check_log.html";i:1569768193;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
+<?php /*a:2:{s:90:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/student/check_log.html";i:1571584417;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,6 +9,8 @@
     <title>查宿记录</title>
 
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/font-awesome.min.css">
+
 <script src="/static/js/vue.js"></script>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/popper.min.js"></script>
@@ -18,6 +20,9 @@
 
 <div id="app">
     <div class="card">
+        <h2 ref="loading" class="alert alert-info text-center py-5 align-content-center" style="position: fixed;width: 100%;height: 100vh;z-index: 1000">
+            加载中,请稍后
+        </h2>
         <div class="card-header">
             <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
                 <span class="fa fa-arrow-left"></span>
@@ -52,7 +57,7 @@
                             {{item.date}}
                         </td>
                         <td>
-                            <button class="btn btn-sm btn-danger" type="1" :id="item.id" @click="fk">
+                            <button class="btn btn-sm btn-danger" type="2" :id="item.id" @click="fk">
                                 反馈
                             </button>
                         </td>
@@ -136,7 +141,7 @@
                                 <img width="310px" class="mw-100 m-2" :src="'/uploads/'+item" v-for="item in room_check_info.pic" alt="">
                             </div>
                             <input type="text" name="id" :value="room_check_info.id" hidden>
-                            <button  class="btn btn-danger m-3" :id="room_check_info.id" type="2" @click.prevent="fk">反馈</button>
+                            <button  class="btn btn-danger m-3" :id="room_check_info.id" type="1" @click.prevent="fk">反馈</button>
                         </form>
                     </div>
                 </div>
@@ -210,6 +215,9 @@
             $.getJSON("studentchecklog",res=>this.studentcheck=res);
             $.getJSON("/index/allRoom",res=>this.gongyu=res);
         },
+        mounted:function () {
+            this.$refs.loading.hidden = 1;
+        }
     })
 </script>
 </body>

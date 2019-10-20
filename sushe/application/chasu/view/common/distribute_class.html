@@ -1,0 +1,108 @@
+{include file="/public/content" /}
+<div>
+    <p class="alert alert-info">已分配班级</p>
+    <table class="table-striped table table-sm" v-if="my_class_list">
+        <tr>
+        <td>id</td>
+        <td>班级名称</td>
+        <td>删除</td>
+        </tr>
+        <tbody>
+        <tr v-for="item in my_class_list">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>
+                <button :data-id="item.id" class="btn btn-sm btn-warning" @click="delClass">
+                    删除
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div v-else="" class="text-center alert alert-warning m-3">
+        还没有安排任何班级呦
+    </div>
+</div>
+<div>
+    <p class="alert alert-info">分配班级</p>
+    <div>
+<!--        <label for="">选择学院</label>-->
+        <select name="" id="" class="form-control" @change="getClass">
+            <option value="">请选择学院</option>
+            <option :value="item.id" v-for="item in college_list">
+                {{item.name}}
+            </option>
+        </select>
+        <div class="">
+            <table class="table" v-if="all_class_list">
+                <tr>
+                <td>班级</td>
+                <td>学院</td>
+                <td>安排</td>
+                </tr>
+                <tbody>
+                <tr v-for="item in all_class_list">
+                    <td>{{item.name}}</td>
+                    <td>{{item.college}}</td>
+                    <td>
+                        <button :data-id="item.id" class="btn btn-primary btn-sm" @click="arrange">
+                            安排权限
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div v-else="" class="text-center alert alert-warning m-3">
+               没有获取到班级信息.
+            </div>
+        </div>
+    </div>
+</div>
+{include file="/public/content_footer" /}
+<script>
+    let app = new Vue({
+        el:"#app",
+        data:{
+            app:{
+                title:"班级分配"
+            },
+            teacher_id:"{$Think.get.id}",
+            my_class_list:null,
+            college_list:null,
+            all_class_list:null,
+        },
+        methods:{
+            res:function(res,call1=()=>location.reload()){
+                if (200 === res.code){
+                    alert("处理成功");
+                    call1();
+                }else {
+                    alert("处理失败")
+                }
+            },
+            delClass:function(event){
+                let id = $(event.target).data("id");
+                $.post("/teacher_Class/delClass",{id:id},res=>this.res(res,function(){
+                    event.target.parentElement.parentElement.remove()
+                }))
+            },
+            getClass:function (event) {
+                let id = $(event.target).val();
+                $.get("/class_Info/getClassList?college_id="+id,res=>this.all_class_list = res.data)
+            },
+            arrange:function (event) {
+                let class_id = $(event.target).data("id");
+                $.post("/teacher_Class/arrange",{teacher_id:this.teacher_id,class:class_id},res=>this.res(res,()=>{
+                    this.my_class_list.push(res.data)
+                }))
+            },
+        },
+        created:function () {
+            $.getJSON("/class_Info/getCollegeList",res=>this.college_list = res.data)
+            $.getJSON("/teacher_Class/getMyClass?teacher_id="+this.teacher_id,res=>this.my_class_list=res.data)
+        },
+        mounted:function () {
+            this.$refs.loading.hidden = 1;
+        }
+    })
+</script>

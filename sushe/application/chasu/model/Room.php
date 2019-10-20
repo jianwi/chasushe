@@ -19,7 +19,9 @@ class Room extends Model
         $louceng = Room::where("id",$fangjian['prev'])->find();
         $danyuan = Room::where("id",$louceng['prev'])->find();
         $gongyu = Room::where("id",$danyuan['prev'])->find();
+        $xiaoqu = Room::where("id",$gongyu['prev'])->find();
         return [
+            "xiaoqu" => $xiaoqu['name'],
             "gongyu" => $gongyu['name'],
             "danyuan" => $danyuan['name'],
             "louceng" => $louceng['name'],

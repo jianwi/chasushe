@@ -1,4 +1,4 @@
-<?php /*a:2:{s:83:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/room.html";i:1570335409;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
+<?php /*a:2:{s:83:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/room.html";i:1571579470;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -19,6 +19,9 @@
 <body>
 
      <div class="card" id="room">
+         <h2 ref="loading" class="alert alert-info text-center py-5 align-content-center" style="position: fixed;width: 100%;height: 100vh;z-index: 1000">
+             加载中,请稍后
+         </h2>
          <div class="card-header">
              <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
                  <span class="fa fa-arrow-left"></span>
@@ -28,6 +31,16 @@
              </h5>
          </div>
         <div class="card-body">
+            <div>
+                <h6>选择校区</h6>
+                <select name="" id="" v-model="xiaoqu_id" @change="sel('gongyu','xiaoqu_id')" class="form-control">
+                    <option value="">选择校区</option>
+                    <option :value="item.id" v-for="item in xiaoqu">{{item.name}}</option>
+                </select>
+                <div>
+                    <button class="m-3 btn btn-primary" @click="addXiaoqu">添加校区</button>
+                </div>
+            </div>
             <h6>查看公寓</h6>
             <label for="" class="">选择公寓</label>
             <div class="input-group">
@@ -37,7 +50,7 @@
                 <button class="input-group-append btn btn-danger" @click="del('gongyu_id')">删除</button>
             </div>
             <label for="" class="">选择单元</label>
-            <div class="input-group">
+            <div class="input-group">                                                                    
             <select name="" id="danyuan" v-model="danyuan_id" class="form-control" @change="sel('louceng','danyuan_id')">
                 <option :value="item.id" v-for="item in danyuan">{{item.name}}</option>
             </select>
@@ -127,6 +140,8 @@ let vm = new Vue({
         },
         sub:function () {
             let form_data = new FormData($("#new-room-form")[0]);
+            if (undefined == room_vm.xiaoqu_id) return alert("请先选择校区")
+            form_data.append("prev",room_vm.xiaoqu_id);
             $.ajax({
                 url:"saveRoom",
                 method: "post",
@@ -159,7 +174,9 @@ let room_vm = new Vue({
         gongyu_id:"",
         danyuan_id:"",
         "louceng_id":"",
-        "fangjian_id":""
+        "fangjian_id":"",
+        "xiaoqu":null,
+        "xiaoqu_id":undefined,
     },
     methods: {
         sel:function (which_sel,cur) {
@@ -176,13 +193,28 @@ let room_vm = new Vue({
                     location.reload()
                 }
             })
+        },
+        addXiaoqu:function () {
+            let xiaoqu = prompt("请输入校区名称");
+            if ("" == xiaoqu || !xiaoqu) return;
+            $.post("addXiaoqu",{name:xiaoqu},res=>{
+                if (200 == res.code){
+                    alert("添加成功");
+                    this.xiaoqu.push(res.data)
+                }else {
+                    alert("添加失败")
+                }
+            })
         }
-    }
+    },
+    created:function () {
+        $.getJSON("/index/allXiaoqu",res=>this.xiaoqu=res)
+    },
+    mounted:function () {
+    this.$refs.loading.hidden = 1;
+}
 })
-        $(document).ready(()=> {
-                $.getJSON("allRoom",res=>room_vm.gongyu=res)
-            }
-        )
+
     </script>
 </body>
 </html>

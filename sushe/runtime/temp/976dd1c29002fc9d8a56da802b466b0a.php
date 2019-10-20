@@ -1,4 +1,4 @@
-<?php /*a:2:{s:93:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/feedback_log.html";i:1570028024;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
+<?php /*a:2:{s:93:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/feedback_log.html";i:1571579232;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,6 +9,8 @@
     <title>学生反馈记录</title>
 
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/font-awesome.min.css">
+
 <script src="/static/js/vue.js"></script>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/popper.min.js"></script>
@@ -17,16 +19,20 @@
 <body>
 
 <div id="app">
+    <h2 ref="loading" class="alert alert-info text-center py-5 align-content-center" style="position: fixed;width: 100%;height: 100vh;z-index: 1000">
+        加载中,请稍后
+    </h2>
     <div class="card">
         <div class="card-header">
             <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
                 <span class="fa fa-arrow-left"></span>
             </button>
+
             <h5 class="text-center d-inline-block w-75 m-0">
                 学生反馈记录
             </h5>
         </div>
-        <div class="card-body">
+        <div class="card-body" v-if="fk_list.length != 0">
             <table class="table table-responsive table-hover table-sm">
                 <thead v-if="">
                     <tr>
@@ -58,6 +64,9 @@
 
                 <button class="btn btn-info" @click="nextPage()">下一页</button>
             </div>
+        </div>
+        <div v-else class="alert alert-info m-3">
+            暂时没有记录
         </div>
     </div>
     <div class="modal hide" data-toggle="modal" id="fk_detail">
@@ -104,7 +113,7 @@
                         <tr>
                             <td colspan="2">
                                 <a :href="'fkdealstudent?id='+fk_detail.id" v-if="fk_detail.type=='学生违纪'" class="btn btn-sm btn-info">去处理</a>
-                                <a href="'fkdealroom?id='+fk_detail.id" v-if="fk_detail.type=='查宿'" class="btn btn-sm btn-info">去处理</a>
+                                <a :href="'fkdealroom?id='+fk_detail.id" v-if="fk_detail.type=='查宿'" class="btn btn-sm btn-info">去处理</a>
                                 <button class="btn btn-sm btn-info" :id="fk_detail.id" @click="hasDeal">已处理</button>
                                 <button class="btn btn-sm btn-info" :id="fk_detail.id" @click="cancel">驳回</button>
                             </td>
@@ -181,6 +190,9 @@
         },
         created:function () {
             $.getJSON("getFeedbackList",res => this.fk_list = res.data);
+        },
+        mounted:function () {
+            this.$refs.loading.hidden = 1;
         }
     })
 </script>

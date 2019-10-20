@@ -1,4 +1,4 @@
-<?php /*a:2:{s:93:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/student/feedback_log.html";i:1569929888;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
+<?php /*a:2:{s:93:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/student/feedback_log.html";i:1571584388;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,6 +9,8 @@
     <title>反馈记录</title>
 
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/font-awesome.min.css">
+
 <script src="/static/js/vue.js"></script>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/popper.min.js"></script>
@@ -17,6 +19,9 @@
 <body>
 
 <div id="app">
+    <h2 ref="loading" class="alert alert-info text-center py-5 align-content-center" style="position: fixed;width: 100%;height: 100vh;z-index: 1000">
+        加载中,请稍后
+    </h2>
     <div class="card">
         <div class="card-header">
             <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
@@ -179,6 +184,9 @@
         },
         created:function () {
             $.getJSON("getFeedbackList",res => this.fk_list = res.data);
+        },
+        mounted:function () {
+            this.$refs.loading.hidden = 1;
         }
     })
 </script>

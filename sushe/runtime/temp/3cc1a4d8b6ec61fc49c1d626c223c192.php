@@ -1,4 +1,4 @@
-<?php /*a:2:{s:87:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/students.html";i:1570334748;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
+<?php /*a:2:{s:87:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/students.html";i:1571579594;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,6 +18,10 @@
 </head>
 <body>
     <div class="card" id="app">
+
+        <h2 ref="loading" class="alert alert-info text-center py-5 align-content-center" style="position: fixed;width: 100%;height: 100vh;z-index: 1000">
+            加载中,请稍后
+        </h2>
         <div class="card-header">
             <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
                 <span class="fa fa-arrow-left"></span>
@@ -29,6 +33,13 @@
         <div class="card-body">
             <div class="card-body">
                 <br>
+                <div>
+                    <label>选择校区</label>
+                    <select name="" id="" v-model="xiaoqu_id" @change="sel('gongyu','xiaoqu_id')" class="form-control">
+                        <option value="">选择校区</option>
+                        <option :value="item.id" v-for="item in xiaoqu">{{item.name}}</option>
+                    </select>
+                </div>
                 <label for="" class="">选择公寓</label>
                 <div class="input-group">
                     <select name="" v-model="gongyu_id" id="gongyu" class="form-control" @change="sel('danyuan','gongyu_id')">
@@ -92,6 +103,8 @@
                 "fangjian_id":"",
                 students:"",
                 getStudentStatus:1,
+                "xiaoqu":null,
+                "xiaoqu_id":undefined,
             },
             methods: {
                 sel:function (which_sel,cur) {
@@ -136,7 +149,10 @@
                 }
             },
             created:function () {
-                $.getJSON("/index/allRoom",res=>this.gongyu=res)
+                $.getJSON("/index/allXiaoqu",res=>this.xiaoqu=res)
+            },
+            mounted:function () {
+                this.$refs.loading.hidden = 1;
             }
         })
 

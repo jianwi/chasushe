@@ -7,6 +7,7 @@ use app\chasu\facade\yiban;
 use app\chasu\model\Feedback;
 use app\chasu\model\History;
 use app\chasu\model\Room;
+use app\chasu\model\User;
 use think\Db;
 use think\facade\Request;
 
@@ -34,6 +35,40 @@ class Teacher
     public function checkRoom()
     {
         return view();
+    }
+    public function getUser()
+    {
+        $room_id = Request::post("room") or die("403");
+        $user_list = User::where([
+            "room" => $room_id,
+            "isDelete" => 0
+        ])->select()->toArray();
+
+        $my_class = db("teacher_class")
+            ->where([
+                "isDelete" => 0,
+                "teacher_id" => $this->info['id']
+            ])
+            ->column("class");
+        $has_my_students = false;
+        array_filter($user_list,function ($var)use($my_class, &$has_my_students){
+            if (in_array($var['class'],$my_class)){
+                $has_my_students = true;
+            }
+        });
+        $res = [
+            "has_right" => $has_my_students,
+            "user_list" => $user_list
+        ];
+        return res::res($res);
+    }
+
+    /**
+     * @return array|\PDOStatement|string|\think\Model|null
+     */
+    public function getInfo()
+    {
+        return $this->info;
     }
     public function checkRoomSub()
     {
@@ -111,7 +146,7 @@ class Teacher
     public function studentCheckLog($p=0)
     {
         $res = Db::table("students_check")
-            ->field("students_check.*,user.room,user.name")
+            ->field("students_check.*,user.room,user.name,user.college,user.class")
             ->where([
                 "students_check.isDelete" => 0,
                 "students_check.teacher_id" => $this->info['id'],
@@ -130,6 +165,8 @@ class Teacher
             ->select();
         $res = array_map(function ($i){
             $i["room"] = $this->getRoomInfo($i["room"]);
+            $i['class'] = User::getClass($i['class']);
+            $i['college'] = User::getClass($i['college']);
             return $i;
         },$res);
         return json($res);
@@ -154,7 +191,9 @@ class Teacher
         $louceng = Room::where("id",$fangjian['prev'])->find();
         $danyuan = Room::where("id",$louceng['prev'])->find();
         $gongyu = Room::where("id",$danyuan['prev'])->find();
+        $xiaoqu = Room::where("id",$gongyu['prev'])->find();
         return [
+            "xiaoqu" => $xiaoqu['name'],
             "gongyu" => $gongyu['name'],
             "danyuan" => $danyuan['name'],
             "louceng" => $louceng['name'],

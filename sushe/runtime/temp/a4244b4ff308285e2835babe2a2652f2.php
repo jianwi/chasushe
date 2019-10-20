@@ -1,4 +1,4 @@
-<?php /*a:2:{s:90:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/check_log.html";i:1568991553;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1568623801;}*/ ?>
+<?php /*a:2:{s:90:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/check_log.html";i:1571584170;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,6 +9,8 @@
     <title>查宿记录</title>
 
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/font-awesome.min.css">
+
 <script src="/static/js/vue.js"></script>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/popper.min.js"></script>
@@ -17,6 +19,10 @@
 <body>
 
 <div id="app">
+    <h2 ref="loading" class="alert alert-info text-center py-5 align-content-center" style="position: fixed;width: 100%;height: 100vh;z-index: 1000">
+        加载中,请稍后
+    </h2>
+
     <div class="card">
         <div class="card-header">
             <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
@@ -29,7 +35,7 @@
         <div class="card-body">
             <p class="text-info">宿舍检查记录</p>
             <div  v-if="roomcheck.length!=0" >
-                <table class="table table-sm table-hover table-bordered">
+                <table class="table table-sm table-responsive-sm table-hover table-bordered">
                     <thead>
                         <tr>
                             <td>id</td>
@@ -42,6 +48,8 @@
                         <tr v-for="item in roomcheck" >
                             <td>{{item.id}}</td>
                             <td>
+                                {{item.room.xiaoqu}}
+
                                 {{item.room.gongyu}}
                                 {{item.room.danyuan}}
                                 {{item.room.louceng}}层
@@ -61,12 +69,15 @@
             <div v-else="">暂时没有记录呦</div>
             <hr>
             <p class="text-info">学生违纪记录</p>
-            <div v-if="studentcheck.length!=0">
-                <table class="table table-sm  table-hover table-bordered">
+            <div v-if="studentcheck.length!=0" class="table-responsive w-100">
+
+                <table class="table table-sm  table-hover table-bordered table-condensed ">
                     <thead>
                     <tr>
                         <td>id</td>
                         <td>姓名</td>
+                        <td>学院</td>
+                        <td>班级</td>
                         <td>宿舍</td>
                         <td>违纪行为</td>
                         <td>删除</td>
@@ -76,7 +87,10 @@
                     <tr v-for="item in studentcheck" >
                         <td>{{item.id}}</td>
                         <td >{{item.name}}</td>
+                        <td>{{item.college}}</td>
+                        <td>{{item.class}}</td>
                         <td>
+                            {{item.room.xiaoqu}}
                             {{item.room.gongyu}}
                             {{item.room.danyuan}}
                             {{item.room.louceng}}层
@@ -103,27 +117,36 @@
             <hr>
             <div>
                 <h4>按照宿舍查记录</h4>
+                <div>
+                    <label>选择校区</label>
+                    <select name="" id="" v-model="xiaoqu_id" @change="sel('gongyu','xiaoqu_id')" class="form-control">
+                        <option value="">选择校区</option>
+                        <option :value="item.id" v-for="item in xiaoqu">{{item.name}}</option>
+                    </select>
+                </div>
+                <label for="" class="">选择公寓</label>
                 <div class="input-group">
-                    <select next="danyuan" v-model="gongyu_id" class="form-control" ref="gongyu" @change="sel">
+                    <select name="" v-model="gongyu_id" id="gongyu" class="form-control" @change="sel('danyuan','gongyu_id')">
                         <option :value="item.id" v-for="item in gongyu">{{item.name}}</option>
                     </select>
                 </div>
                 <label for="" class="">选择单元</label>
                 <div class="input-group">
-                    <select next="louceng" v-model="danyuan_id" class="form-control" @change="sel">
-                    <option :value="item.id" v-for="item in danyuan">{{item.name}}</option>
+                    <select name="" id="danyuan" v-model="danyuan_id" class="form-control" @change="sel('louceng','danyuan_id')">
+                        <option :value="item.id" v-for="item in danyuan">{{item.name}}</option>
                     </select>
                 </div>
                 <label for="" class="">选择楼层</label>
+
                 <div class="input-group">
-                    <select next="fangjian" v-model="louceng_id" class="form-control" @change="sel">
-                    <option :value="item.id" v-for="item in louceng">{{item.name}}</option>
+                    <select name="" id="loucheng" v-model="louceng_id" class="form-control" @change="sel('fangjian','louceng_id')">
+                        <option :value="item.id" v-for="item in louceng">{{item.name}}</option>
                     </select>
                 </div>
                 <label for="fangjian" class="">选择房间号</label>
                 <div class="input-group">
                     <select class="form-control" v-model="fangjian_id" @change="setRoomCheck2">
-                    <option :value="item.id" v-for="item in fangjian">{{item.name}}</option>
+                        <option :value="item.id" v-for="item in fangjian">{{item.name}}</option>
                     </select>
                 </div>
                 <div v-if="fangjian_id">
@@ -141,6 +164,8 @@
                             <tr v-for="item in roomcheck2" >
                                 <td>{{item.id}}</td>
                                 <td>
+                                    {{item.room.xiaoqu}}
+
                                     {{item.room.gongyu}}
                                     {{item.room.danyuan}}
                                     {{item.room.louceng}}层
@@ -230,12 +255,13 @@
             gongyu_id:"",
             danyuan_id:"",
             louceng_id:"",
-            fangjian_id:""
+            fangjian_id:"",
+            "xiaoqu":null,
+            "xiaoqu_id":undefined,
         },
         methods: {
-            sel:function(event)
-            {
-                $.getJSON("/index/getRoom&id="+event.target.value,res=>this[event.target.getAttribute("next")]=res)
+            sel:function (which_sel,cur) {
+                $.getJSON("/index/getRoom&id="+this[cur],res=>this[which_sel]=res)
             },
             prePage: function (which) {
                 if (this[which + "_page"] == 0) {
@@ -313,8 +339,11 @@
         created:function () {
             $.getJSON("roomchecklog",res=>this.roomcheck=res);
             $.getJSON("studentchecklog",res=>this.studentcheck=res);
-            $.getJSON("/index/allRoom",res=>this.gongyu=res);
+            $.getJSON("/index/allXiaoqu",res=>this.xiaoqu=res)
         },
+        mounted:function () {
+            this.$refs.loading.hidden = 1;
+        }
     })
 </script>
 </body>

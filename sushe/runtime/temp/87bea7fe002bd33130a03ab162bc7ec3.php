@@ -1,4 +1,4 @@
-<?php /*a:2:{s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/student/index.html";i:1569770083;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
+<?php /*a:2:{s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/student/index.html";i:1571584362;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -27,9 +27,9 @@
 
 
 </div>
-<div class="alert alert-secondary text-center m-0 fixed-bottom">
-    Powered and Design by 奇点工作室
-</div>
+<!--<div class="alert alert-secondary text-center m-0 fixed-bottom">-->
+<!--    Powered and Design by 奇点工作室-->
+<!--</div>-->
 
 </body>
 </html>

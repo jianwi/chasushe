@@ -1,4 +1,4 @@
-<?php /*a:2:{s:91:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/check_room.html";i:1570334856;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
+<?php /*a:2:{s:91:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/teacher/check_room.html";i:1571579150;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -21,6 +21,9 @@
 </head>
 <body>
 <div class="card" id="app">
+    <h2 ref="loading" class="alert alert-info text-center py-5 align-content-center" style="position: fixed;width: 100%;height: 100vh;z-index: 1000">
+        加载中,请稍后
+    </h2>
     <div class="card-header">
         <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
             <span class="fa fa-arrow-left"></span>
@@ -31,6 +34,13 @@
     </div>
     <div class="card-body">
         <div class="card-body">
+            <div>
+                <label>选择校区</label>
+                <select name="" id="" v-model="xiaoqu_id" @change="sel('gongyu','xiaoqu_id')" class="form-control">
+                    <option value="">选择校区</option>
+                    <option :value="item.id" v-for="item in xiaoqu">{{item.name}}</option>
+                </select>
+            </div>
             <label for="" class="">选择公寓</label>
             <div class="input-group">
                 <select name="" v-model="gongyu_id" id="gongyu" class="form-control" @change="sel('danyuan','gongyu_id')">
@@ -63,13 +73,13 @@
                         <img class="p-1 m-2 border-white" style="width: 130px;" :src="'/uploads/'+item.pic" alt="">
                         <p>姓名: {{item.name}}</p>
                         <p>学院: {{item.college}}</p>
-                        <p>班级: {{item.major}}</p>
+                        <p>班级: {{item.class}}</p>
                         <p class="btn-group">
                             <button value="1" :name="item.name" :id="item.id"   @click="mark" class="btn btn-sm btn-info">晚归</button>
                             <button class="btn btn-sm btn-danger" :name="item.name" :id="item.id" value="2" @click="mark">夜不归宿</button>
                         </p>
                     </div>
-                    <div v-show="this.fangjian_id" class="my-3 p-2">
+                    <div v-show="this.have_right" class="my-3 p-2">
                         <form action="" @submit="sub" onsubmit="return false">
                         <div class="input-group">
                             <span class="input-group-prepend input-group-text">宿舍打分</span>
@@ -109,7 +119,10 @@
             "louceng_id":"",
             "fangjian_id":"",
             students:"",
-            images:[]
+            images:[],
+            "xiaoqu":null,
+            "xiaoqu_id":undefined,
+            have_right:false,
         },
         methods: {
             sel:function (which_sel,cur) {
@@ -150,8 +163,17 @@
                 })
             },
             getStudent:function (event) {
+                this.students = null;
                 let room_id = event.target.value;
-                $.post("/index/getUser",{room:room_id},res=>this.students=res)
+                $.post("getUser",{room:room_id},res=>{
+                    if (true != res.data.has_right){
+                        alert("当前宿舍没有入住您管理的学生,或者您的学生暂时未完善宿舍信息.您无权限!!!")
+                        this.have_right = false;
+                        return;
+                    }
+                    this.have_right = true;
+                    this.students = res.data.user_list
+                })
             },
             showImg:function (event) {
                 let file = event.target.files[0]
@@ -164,18 +186,22 @@
             }
         },
         created:function () {
-            $.getJSON("/index/allRoom",res=>this.gongyu=res)
+            $.getJSON("/index/allXiaoqu",res=>this.xiaoqu=res)
+            $('#ssi-upload').ssi_uploader({
+                url: 'upload',
+                locale:"zh_CN",
+                maxFileSize:10240,
+                onEachUpload:function (res) {
+                    if (res.responseMsg=="服务器内部错误") return;
+                    app.images.push(res.responseMsg)
+                }
+            });
+        },
+        mounted:function () {
+            this.$refs.loading.hidden = 1;
         }
     })
 
-$('#ssi-upload').ssi_uploader({
-    url: 'upload',
-    locale:"zh_CN",
-    onEachUpload:function (res) {
-        if (res.responseMsg=="服务器内部错误") return;
-        app.images.push(res.responseMsg)
-    }
-});
 </script>
 </body>
 </html>

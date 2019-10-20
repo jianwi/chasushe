@@ -21,6 +21,9 @@
 </head>
 <body>
 <div class="card" id="app">
+    <h2 ref="loading" class="alert alert-info text-center py-5 align-content-center" style="position: fixed;width: 100%;height: 100vh;z-index: 1000">
+        加载中,请稍后
+    </h2>
     <div class="card-header">
         <button class="btn btn-sm btn-info rounded-circle" onclick="history.back()">
             <span class="fa fa-arrow-left"></span>
@@ -42,9 +45,22 @@
                 <label for="">姓名</label>
                 <input type="text" placeholder="请填写您的姓名" class="form-control" name="name" value="{$user.name}" required>
                 <label for="">学院</label>
-                <input type="text" placeholder="" name="college" class="form-control" value="{$user.college}" required>
-                <label for="">专业</label>
-                <input type="text" class="form-control" required name="major" value="{$user.major}">
+                <select name="college" class="form-control" @change="getClass">
+                    <option value="{$user.college_id}" >{$user.college}</option>
+                    <option :value="item.id" v-for="item in college">{{item.name}}</option>
+                </select>
+                <label for="">班级</label>
+                <select name="class" class="form-control">
+                    <option value="{$user.class_id}">{$user.class}</option>
+                    <option :value="item.id" v-for="item in class_list">{{item.name}}</option>
+                </select>
+                <div>
+                    <label>选择校区</label>
+                    <select name="" id="" v-model="xiaoqu_id" @change="sel('gongyu','xiaoqu_id')" class="form-control">
+                        <option value="">选择校区</option>
+                        <option :value="item.id" v-for="item in xiaoqu">{{item.name}}</option>
+                    </select>
+                </div>
 
                 <label for="" class="">选择公寓</label>
                 <div class="input-group">
@@ -89,7 +105,10 @@
             "louceng_id":"",
             "fangjian_id":"",
             img_src :"/uploads/{$user.pic}",
-
+            "xiaoqu":null,
+            "xiaoqu_id":undefined,
+            "college" : null,
+            "class_list" : null,
         },
         methods: {
             sel:function (which_sel,cur) {
@@ -119,11 +138,20 @@
                 let file = event.target.files[0]
                 $("img")[0].hidden=0
                 this.img_src = URL.createObjectURL(file)
+            },
+            getClass:function (event) {
+                let id = event.target.value;
+                $.getJSON("/index/getClass?id="+id,res=>this.class_list = res)
             }
         },
         created:function () {
-            $.getJSON("/index/allRoom",res=>this.gongyu=res)
+            $.getJSON("/index/allXiaoqu",res=>this.xiaoqu=res)
+            $.getJSON("/index/getCollege",res=>this.college=res)
+        },
+        mounted:function () {
+            this.$refs.loading.hidden = 1;
         }
+
     })
 </script>
 </body>

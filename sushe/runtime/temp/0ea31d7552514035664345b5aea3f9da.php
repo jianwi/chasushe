@@ -1,4 +1,4 @@
-<?php /*a:2:{s:84:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/index.html";i:1570334748;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
+<?php /*a:2:{s:84:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/admin/index.html";i:1571582852;s:86:"/home/dujianjun/PhpstormProjects/sushe/sushe/application/chasu/view/public/header.html";i:1570269144;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -30,6 +30,10 @@
                 <img src="/static/img/sushe.png" alt="" class="nav_img">
                 <p class="w-100 m-1  p-1 text-center">公寓信息</p>
             </a>
+            <a href="/admin/classinfo" class="text-center nav d-inline-block border p-2 rounded shadow my-1">
+                <img src="/static/img/class.png" alt="" class="nav_img">
+                <p class="w-100 m-1  p-1 text-center">班级管理</p>
+            </a>
             <a href="/admin/students" class="text-center nav d-inline-block border p-2 rounded shadow">
                 <img src="/static/img/student.png" alt="" class="nav_img">
                 <p class="w-100 m-1  p-1 text-center">学生信息</p>
@@ -42,6 +46,9 @@
                 <img src="/static/img/history.png" alt="" class="nav_img">
                 <p class="w-100 m-1  p-1 text-center">操作日志</p>
             </a>
+
+
+
         </div>
     </div>
 

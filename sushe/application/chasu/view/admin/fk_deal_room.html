@@ -129,6 +129,9 @@
         created:function () {
             $.getJSON("roomcheckinfo&id={$id}", res => this.room_check_info = res)
         },
+        mounted:function () {
+        this.$refs.loading.hidden = 1;
+    }
     })
 </script>
 </body>
